@@ -1,0 +1,31 @@
+# ======================================================
+# Ignorar tudo que é gerado pelo script e dados sensíveis
+# ======================================================
+# Diretório data: contém configs, filtros, logs e bancos (não versionar)
+data/
+
+# Logs temporários do AdGuard
+*.log
+
+# Arquivos de cache ou estado local do AdGuard
+*.db
+*.sqlite
+*.tmp
+
+# ======================================================
+# Arquivos de ambiente (segurança)
+# ======================================================
+.env
+.env.local
+
+# ======================================================
+# Editores
+# ======================================================
+.vscode/
+*.swp
+
+# ======================================================
+# Arquivos do sistema / OS que não interessam no repositório
+# ======================================================
+.DS_Store
+Thumbs.db
