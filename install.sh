@@ -70,19 +70,32 @@ ok "IP LAN        : $LAN_IP"
 ok "Subnet LAN    : $LAN_NET"
 
 # ----------------------------------------------------------
-# 3️⃣ Docker
+# 3️⃣ Docker + Docker Compose (plugin OU clássico)
 # ----------------------------------------------------------
 log "Instalando Docker (se necessário)"
+
 if ! command -v docker >/dev/null; then
   apt update
-  apt install -y docker.io docker-compose
+  apt install -y docker.io
 fi
+
 systemctl enable docker --now
 ok "Docker pronto"
 
-command -v docker-compose >/dev/null || die "docker-compose não encontrado"
-COMPOSE_CMD="docker-compose"
-ok "Compose command: docker-compose"
+# Detectar docker compose (plugin) ou docker-compose (clássico)
+if docker compose version >/dev/null 2>&1; then
+  COMPOSE_CMD="docker compose"
+  ok "Compose command: docker compose (plugin)"
+elif command -v docker-compose >/dev/null 2>&1; then
+  COMPOSE_CMD="docker-compose"
+  ok "Compose command: docker-compose (clássico)"
+else
+  log "Instalando docker-compose clássico"
+  apt update
+  apt install -y docker-compose
+  COMPOSE_CMD="docker-compose"
+  ok "Compose command: docker-compose (instalado)"
+fi
 
 # ----------------------------------------------------------
 # 4️⃣ Tailscale
@@ -203,6 +216,8 @@ APÓS FINALIZAR O WIZARD
    - "3000:80"
 
 3) Aplique:
+   docker compose up -d
+   ou
    docker-compose up -d
 
 Painel final:
