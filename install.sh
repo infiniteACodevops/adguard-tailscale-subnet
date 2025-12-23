@@ -41,7 +41,7 @@ ok "OS suportado: $OS_ID $OS_VER"
 # ----------------------------------------------------------
 mapfile -t SUBNETS < <(
   ip -br -4 addr show up | awk '
-    !/^lo/ && !/^docker/ && !/^br-/ && !/^veth/ {
+    !/^lo/ && !/^docker/ && !/^br-/ && !/^veth/ && !/^tailscale/ {
       split($3,a,"/");
       split(a[1],b,".");
       printf "%s.%s.%s.0/%s %s\n",b[1],b[2],b[3],a[2],$1
