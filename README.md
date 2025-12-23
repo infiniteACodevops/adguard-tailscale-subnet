@@ -48,13 +48,61 @@ sudo iptables -t nat -F
 | --- | --- |
 | **Sistema** | Debian 11+ ou Ubuntu 20.04+ |
 | **Privilégios** | Acesso Root ou Sudo |
-| **Infra** | Interface LAN com IPv4 estático |
+| **Infra** | Interface LAN com IPv4 |
 | **VPN** | Conta ativa no [Tailscale](https://tailscale.com) |
+| **Pacotes** | git (para clone), curl, ca-certificates |
+
+ ### Instalar dependências básicas (se necessário)
+
+```bash
+apt update && apt install -y git curl ca-certificates
+```
+
+### ⚠️ Pré-requisito adicional — Cloud Images (Debian / Ubuntu / Proxmox)
+
+Em **cloud images** (Debian ou Ubuntu), o serviço **systemd-resolved** vem **ativo por padrão** e ocupa a **porta 53 (DNS)**.
+
+Como este projeto implementa **um servidor DNS próprio (AdGuard Home)**, é **obrigatório** desativar o DNS do sistema **antes de executar o script**, caso contrário o container não conseguirá iniciar.
+
+
+#### Quando este passo é necessário
+
+- ✅ Debian cloud-image  
+- ✅ Ubuntu cloud-image  
+- ✅ VMs no Proxmox usando cloud-image  
+
+#### Quando pode não ser necessário
+
+- ℹ️ Instalação via ISO tradicional  
+- ℹ️ Hosts que não utilizam `systemd-resolved` como DNS local  
+
+#### Execute **uma única vez**, antes da instalação:
+
+```bash
+
+systemctl stop systemd-resolved
+systemctl disable systemd-resolved
+systemctl mask systemd-resolved
+
+```
+
+> ⚠️ **Observação:** Este passo altera o comportamento de resolução DNS do sistema.  
+> Ele é um **pré-requisito do ambiente**, não uma automação do script.
+> ❗ O script **não desativa automaticamente** o systemd-resolved por segurança.
 
 > ⚠️ **Modelo de ameaça considerado:** O host deve estar **atrás de NAT**, sem portas WAN expostas diretamente.  
 > Este projeto **não é seguro** se a máquina tiver portas DNS/HTTP abertas para a internet pública.
 
+
 ---
+
+## 🚀 Quick start (recomendado)
+
+```bash
+
+git clone https://github.com/infiniteACodevops/adguard-tailscale-subnet.git && cd adguard-tailscale-subnet && chmod +x install.sh && sudo ./install.sh
+
+```
 
 ## 📥 Instalação Passo a Passo
 
@@ -109,7 +157,7 @@ Troque `- "3000:3000"` por `- "3000:80"`.
 3️⃣ **Reinicie o container:**
 
 ```bash
-cd /opt/dns-vpn && docker-compose up -d
+cd /opt/dns-vpn && (docker compose up -d || docker-compose up -d) 
 
 ```
 
