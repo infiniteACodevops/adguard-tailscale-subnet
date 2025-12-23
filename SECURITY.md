@@ -16,7 +16,8 @@ Ao anunciar sua sub-rede, o sistema **não** se torna vulnerável.
 
 ### ✅ O que acontece de verdade (Fato Técnico)
 
-O Tailscale cria um túnel cifrado onde a rede local só existe **após** a descriptografia.
+O Tailscale cria um túnel cifrado onde a rota para a rede local
+só é instalada após autenticação e descriptografia.
 
 **📌 Prova Objetiva:**
 
@@ -80,5 +81,17 @@ Ele é uma ferramenta de rede profissional que garante acesso:
 * 🔐 **Invisível** fora da sua malha privada (Tailnet).
 
 📌 *O receio de exposição é comum, mas tecnicamente não se aplica ao funcionamento do Tailscale.*
+
+---
+
+### 📌 Escopo de Segurança Considerado
+
+Este veredito assume:
+
+- Host atrás de NAT (sem IP público direto)
+- Nenhuma porta WAN exposta manualmente
+- Tailnet privada (sem usuários convidados ou nós públicos)
+
+Fora dessas condições, o modelo de ameaça deve ser reavaliado.
 
 ---
